@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Codex认证助手",
+  "name": "Codex Auth Helper",
   "short_name": "Codex Auth Helper",
-  "version": "1.1.0",
-  "description": "安全地在本地导出您的已登录 ChatGPT 会话配置，生成符合 Codex 规范的 auth.json 本地备份文件。纯本地离线处理。",
+  "version": "1.2.0",
+  "description": "Securely export your logged-in ChatGPT session configuration locally, generating Codex-compliant auth.json backup files. Pure local offline processing.",
   "permissions": [
     "downloads"
   ],
   "host_permissions": [
-    "https://chatgpt.com/"
+    "https://chatgpt.com/api/auth/session"
   ],
   "action": {
     "default_popup": "popup/popup.html"
@@ -20,5 +20,8 @@
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; connect-src 'self' https://chatgpt.com; img-src 'self' https://lh3.googleusercontent.com https://avatars.githubusercontent.com https://s.gravatar.com data:; default-src 'self'"
   }
 }
