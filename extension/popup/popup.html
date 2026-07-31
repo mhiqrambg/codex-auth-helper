@@ -1,189 +1,396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex Auth Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Codex Auth Helper</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-
-<body>
-  <div class="app-container">
-    <header class="app-header">
-      <div class="logo-container">
-        <div class="logo-glow"></div>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
-        <div class="logo-text">
-          <h1>Codex Auth Helper</h1>
-          <span class="logo-sub">Secure Authentication</span>
-        </div>
-      </div>
-    </header>
-
-    <main class="app-main">
-
-      <div id="state-loading" class="state-container active">
-        <div class="loader">
-          <div class="loader-ring"></div>
-          <div class="loader-dot"></div>
-        </div>
-        <p class="loading-text">Securely fetching login information...</p>
-      </div>
-
-      <div id="state-unauthorized" class="state-container">
-        <div class="alert-icon-container">
-          <svg class="alert-icon animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="logo-container">
+          <div class="logo-glow"></div>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
-        </div>
-        <h2 class="state-title">ChatGPT Login Not Detected</h2>
-        <p class="state-desc">Please log in to your ChatGPT account first. This extension will securely extract login credentials from your local browser cache, bypassing phone verification.</p>
-        <button id="btn-login" class="btn-primary ripple">
-          <span>Go to ChatGPT Login</span>
-          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
-      </div>
-
-      <div id="state-authorized" class="state-container">
-        <div class="profile-card">
-          <div class="profile-avatar-container">
-            <img id="user-avatar" class="profile-avatar" src="" alt="User Avatar">
-            <div class="avatar-ring"></div>
-          </div>
-          <div class="profile-info">
-            <h3 id="user-name">Loading...</h3>
-            <p id="user-email">Loading...</p>
-          </div>
-          <div id="badge-plan" class="plan-badge">FREE</div>
-        </div>
-
-        <div class="details-panel glass-card">
-          <div class="detail-row">
-            <span class="detail-label">Status:</span>
-            <span class="detail-value text-glow-success">Login Successful</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Valid Until:</span>
-            <span id="token-expires" class="detail-value">Loading...</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Time Remaining:</span>
-            <span id="token-countdown" class="detail-value text-glow-green">Loading...</span>
+          <div class="logo-text">
+            <h1>Codex Auth Helper</h1>
+            <span class="logo-sub">Secure Authentication</span>
           </div>
         </div>
+      </header>
 
-        <div class="action-group">
-          <button id="btn-download" class="btn-primary ripple btn-pulse">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      <main class="app-main">
+        <div id="state-loading" class="state-container active">
+          <div class="loader">
+            <div class="loader-ring"></div>
+            <div class="loader-dot"></div>
+          </div>
+          <p class="loading-text">Securely fetching login information...</p>
+        </div>
+
+        <div id="state-unauthorized" class="state-container">
+          <div class="alert-icon-container">
+            <svg
+              class="alert-icon animate-bounce"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
-            <span>Export Credentials</span>
+          </div>
+          <h2 class="state-title">ChatGPT Login Not Detected</h2>
+          <p class="state-desc">
+            Please log in to your ChatGPT account first. This extension will
+            securely extract login credentials from your local browser cache,
+            bypassing phone verification.
+          </p>
+          <button id="btn-login" class="btn-primary ripple">
+            <span>Go to ChatGPT Login</span>
+            <svg
+              class="btn-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </button>
         </div>
 
-        <details class="accordion-card">
-          <summary class="accordion-header">
-            <h4>Usage Instructions</h4>
-            <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </summary>
-          <div class="accordion-content">
-            <div class="guide-steps">
-              <div class="step-item">
-                <span class="step-num">1</span>
-                <div class="step-content">
-                  <h5>Step 1: Export Credentials</h5>
-                  <p>Click the "Export Credentials" button above. The system will automatically export your local ChatGPT authentication data and save it as an <code>auth.json</code> file.</p>
-                </div>
+        <div id="state-authorized" class="state-container">
+          <div class="profile-card">
+            <div class="profile-avatar-container">
+              <img
+                id="user-avatar"
+                class="profile-avatar"
+                src=""
+                alt="User Avatar"
+              />
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Loading...</h3>
+              <p id="user-email">Loading...</p>
+            </div>
+            <div id="badge-plan" class="plan-badge">FREE</div>
+          </div>
+
+          <div class="details-panel glass-card">
+            <div class="detail-row">
+              <span class="detail-label">Status:</span>
+              <span class="detail-value text-glow-success"
+                >Login Successful</span
+              >
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Valid Until:</span>
+              <span id="token-expires" class="detail-value">Loading...</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Time Remaining:</span>
+              <span id="token-countdown" class="detail-value text-glow-green"
+                >Loading...</span
+              >
+            </div>
+          </div>
+
+          <div class="action-group">
+            <button id="btn-save" class="btn-secondary ripple">
+              <svg
+                class="btn-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                />
+              </svg>
+              <span>Save Account</span>
+            </button>
+            <button
+              id="btn-download-current"
+              class="btn-primary ripple btn-pulse"
+            >
+              <svg
+                class="btn-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              <span>Export Current Account</span>
+            </button>
+          </div>
+
+          <!-- Saved Accounts Section -->
+          <div
+            id="saved-accounts-section"
+            class="saved-accounts-section hidden"
+          >
+            <div class="section-header">
+              <h4>Saved Accounts (<span id="saved-count">0</span>)</h4>
+              <div class="header-actions">
+                <button id="btn-clear-all" class="btn-icon-action btn-danger">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </div>
-              <div class="step-item">
-                <span class="step-num">2</span>
-                <div class="step-content">
-                  <h5>Step 2: Move to Codex Directory</h5>
-                  <p>Move the <code>auth.json</code> file to your Codex configuration directory:</p>
-                  <div class="path-details">
-                    <p><strong>Windows:</strong> <code>%USERPROFILE%\.codex\auth.json</code></p>
-                    <p><strong>macOS:</strong> <code>~/.codex/auth.json</code></p>
+            </div>
+            <div id="saved-accounts-list" class="saved-accounts-list">
+              <!-- Accounts will be dynamically inserted here -->
+            </div>
+
+            <!-- Export Format Selector - Only shown when accounts exist -->
+            <div id="export-format-section" class="export-format-section">
+              <h4 class="section-title">Export Saved Accounts</h4>
+              <div class="format-options">
+                <label class="format-option">
+                  <input
+                    type="radio"
+                    name="export-format"
+                    value="codex"
+                    checked
+                  />
+                  <div class="format-card">
+                    <div class="format-header">
+                      <strong>Codex Format</strong>
+                      <span class="format-badge">Single</span>
+                    </div>
+                    <p class="format-desc">
+                      Export first saved account for Codex
+                    </p>
+                  </div>
+                </label>
+                <label class="format-option">
+                  <input type="radio" name="export-format" value="9router" />
+                  <div class="format-card">
+                    <div class="format-header">
+                      <strong>9router Format</strong>
+                      <span class="format-badge multi">Multi</span>
+                    </div>
+                    <p class="format-desc">
+                      Export all saved accounts as array
+                    </p>
+                  </div>
+                </label>
+              </div>
+              <button
+                id="btn-export-saved"
+                class="btn-primary ripple btn-pulse"
+              >
+                <svg
+                  class="btn-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                <span>Export Saved Accounts</span>
+              </button>
+            </div>
+          </div>
+
+          <details class="accordion-card">
+            <summary class="accordion-header">
+              <h4>Usage Instructions</h4>
+              <svg
+                class="accordion-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <div class="guide-steps">
+                <div class="step-item">
+                  <span class="step-num">1</span>
+                  <div class="step-content">
+                    <h5>Step 1: Export Credentials</h5>
+                    <p>
+                      Click the "Export Credentials" button above. The system
+                      will automatically export your local ChatGPT
+                      authentication data and save it as an
+                      <code>auth.json</code> file.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-item">
+                  <span class="step-num">2</span>
+                  <div class="step-content">
+                    <h5>Step 2: Move to Codex Directory</h5>
+                    <p>
+                      Move the <code>auth.json</code> file to your Codex
+                      configuration directory:
+                    </p>
+                    <div class="path-details">
+                      <p>
+                        <strong>Windows:</strong>
+                        <code>%USERPROFILE%\.codex\auth.json</code>
+                      </p>
+                      <p>
+                        <strong>macOS:</strong> <code>~/.codex/auth.json</code>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="step-item">
+                  <span class="step-num">3</span>
+                  <div class="step-content">
+                    <h5>Step 3: Launch Codex</h5>
+                    <p>
+                      After placing the file, launch or restart your Codex
+                      client. It will automatically load the credentials,
+                      bypassing phone verification.
+                    </p>
                   </div>
                 </div>
               </div>
-              <div class="step-item">
-                <span class="step-num">3</span>
-                <div class="step-content">
-                  <h5>Step 3: Launch Codex</h5>
-                  <p>After placing the file, launch or restart your Codex client. It will automatically load the credentials, bypassing phone verification.</p>
-                </div>
-              </div>
             </div>
-          </div>
-        </details>
+          </details>
 
-        <details class="accordion-card">
-          <summary class="accordion-header">
-            <h4>Privacy & Security</h4>
-            <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </summary>
-          <div class="accordion-content">
-            <ul class="privacy-list">
-              <li>
-                <span class="privacy-bullet success">●</span>
-                <div class="privacy-item">
-                  <strong>Local Processing</strong>: No cloud upload, no storage
-                </div>
-              </li>
-              <li>
-                <span class="privacy-bullet primary">●</span>
-                <div class="privacy-item">
-                  <strong>Privacy Safe</strong>: Processed locally in browser
-                </div>
-              </li>
-              <li>
-                <span class="privacy-bullet warning">●</span>
-                <div class="privacy-item">
-                  <strong>Fast Generation</strong>: Reduces repeated login verification
-                </div>
-              </li>
-            </ul>
-          </div>
-        </details>
+          <details class="accordion-card">
+            <summary class="accordion-header">
+              <h4>Privacy & Security</h4>
+              <svg
+                class="accordion-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <ul class="privacy-list">
+                <li>
+                  <span class="privacy-bullet success">●</span>
+                  <div class="privacy-item">
+                    <strong>Local Processing</strong>: No cloud upload, no
+                    storage
+                  </div>
+                </li>
+                <li>
+                  <span class="privacy-bullet primary">●</span>
+                  <div class="privacy-item">
+                    <strong>Privacy Safe</strong>: Processed locally in browser
+                  </div>
+                </li>
+                <li>
+                  <span class="privacy-bullet warning">●</span>
+                  <div class="privacy-item">
+                    <strong>Fast Generation</strong>: Reduces repeated login
+                    verification
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </main>
 
-      </div>
+      <footer class="app-footer">
+        <div class="safety-badge">
+          <svg
+            class="badge-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
+          </svg>
+          <span>No Cloud Upload • Privacy Safe • Local Sandbox Processing</span>
+        </div>
+        <div class="watermark">Made with ❤️ by mhiqrambg</div>
+      </footer>
 
-    </main>
-
-    <footer class="app-footer">
-      <div class="safety-badge">
-        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        <span>No Cloud Upload • Privacy Safe • Local Sandbox Processing</span>
-      </div>
-    </footer>
-
-    <div id="toast" class="toast-container">
-      <div class="toast-content">
-        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <span id="toast-message">Operation Successful</span>
+      <div id="toast" class="toast-container">
+        <div class="toast-content">
+          <svg
+            class="toast-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <span id="toast-message">Operation Successful</span>
+        </div>
       </div>
     </div>
 
-  </div>
-
-  <script src="popup.js"></script>
-</body>
-
+    <script src="popup.js"></script>
+  </body>
 </html>

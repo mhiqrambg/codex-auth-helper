@@ -25,9 +25,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.action === 'download_auth_json') {
     const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(message.jsonContent);
+    const filename = message.filename || 'auth.json';
+    
     chrome.downloads.download({
       url: dataUrl,
-      filename: 'auth.json',
+      filename: filename,
       saveAs: true,
       conflictAction: 'uniquify'
     }, (downloadId) => {

@@ -2,10 +2,11 @@
   "manifest_version": 3,
   "name": "Codex Auth Helper",
   "short_name": "Codex Auth Helper",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Securely export your logged-in ChatGPT session configuration locally, generating Codex-compliant auth.json backup files. Pure local offline processing.",
   "permissions": [
-    "downloads"
+    "downloads",
+    "storage"
   ],
   "host_permissions": [
     "https://chatgpt.com/api/auth/session"
